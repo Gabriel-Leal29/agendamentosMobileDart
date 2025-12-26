@@ -1,5 +1,8 @@
+import 'package:agendamentos_mobile_dart/repositorys/agendamento_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import '../models/agendamento.dart';
 
 class AgendamentosPage extends StatefulWidget {
   const AgendamentosPage({Key? key}) : super(key: key);
@@ -9,8 +12,16 @@ class AgendamentosPage extends StatefulWidget {
 }
 
 class _AgendamentosPageState extends State<AgendamentosPage> {
-  // late List<Agendamento> agendamentos = []; // iniciação do array dos agendamentos
+  late final AgendamentoRepository agendamentoRepository;
+  late List<Agendamento> agendamentos = agendamentoRepository.getAgendamentos(); // iniciação do array dos agendamentos
 
+  //inicio as variaveis
+  @override
+  void initState(){
+    super.initState();
+    agendamentoRepository = AgendamentoRepository();
+    agendamentos = agendamentoRepository.getAgendamentos();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +31,7 @@ class _AgendamentosPageState extends State<AgendamentosPage> {
         centerTitle: true,
       ),
       body: ListView.builder(
-        itemCount: 2, //agendamentos.length
+        itemCount: agendamentos.length,
           itemBuilder: (context, index){
           return ListTile(
             title: Text('Nome do cliente'),

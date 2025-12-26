@@ -12,3 +12,4 @@ class Agendamento {
     required this.data,
     required this.cliente,
   });
+}

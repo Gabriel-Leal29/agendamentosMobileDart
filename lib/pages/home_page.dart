@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'agendamentos_page.dart';
+
 class HomePage extends StatefulWidget{
   @override
   State<StatefulWidget> createState() => _HomePageState();
@@ -11,7 +13,7 @@ class _HomePageState extends State<HomePage>{
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView(
-        children: [
+        children: const [
           AgendamentosPage(), //futura pagina dos agendamentos
         ],
       ),
@@ -25,8 +27,4 @@ class _HomePageState extends State<HomePage>{
       ),
     );
   }
-
-}
-
-class AgendamentosPage {
 }
