@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/agendamento.dart';
+import 'mostrar_detalhes_agendamento_page.dart';
 
 class AgendamentosPage extends StatefulWidget {
   const AgendamentosPage({Key? key}) : super(key: key);
@@ -13,14 +14,22 @@ class AgendamentosPage extends StatefulWidget {
 
 class _AgendamentosPageState extends State<AgendamentosPage> {
   late final AgendamentoRepository agendamentoRepository;
-  late List<Agendamento> agendamentos = agendamentoRepository.getAgendamentos(); // iniciação do array dos agendamentos
+  late List<Agendamento> agendamentos;
 
   //inicio as variaveis
   @override
   void initState(){
     super.initState();
     agendamentoRepository = AgendamentoRepository();
-    agendamentos = agendamentoRepository.getAgendamentos();
+    agendamentos = agendamentoRepository.getAgendamentos(); // iniciação do array dos agendamentos
+  }
+
+  //métodos
+  mostrarDetalhesAgendamento(Agendamento agendamento){
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => MostrarDetalhesAgendamento(agendamento: agendamento))
+    );
   }
 
   @override
@@ -38,9 +47,11 @@ class _AgendamentosPageState extends State<AgendamentosPage> {
             subtitle: Text('13/05/2026'),
             leading: const Icon(Icons.calendar_month),
             trailing: const Icon(Icons.chevron_right),
+            onTap: () => mostrarDetalhesAgendamento(agendamentos[index]),
           );
           }
-      )
+      ),
+
     );
   }
 

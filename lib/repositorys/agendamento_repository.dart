@@ -7,7 +7,7 @@ class AgendamentoRepository {
     Agendamento(
       id: 1,
       servico: 'Corte de cabelo',
-      data: DateTime(2025, 3, 19, 14, 0),
+      data: DateTime.parse('2025-03-19T19:33'),
       cliente: Cliente(id: 1, nome: 'João Silva', email: 'texte@gmail.com', celular: '00 0000-0000'),
     ),
   ];

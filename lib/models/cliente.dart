@@ -10,4 +10,24 @@ class Cliente {
     required this.email,
     required this.celular,
   });
+
+
+  //converte os dados da API (json) em um objeto cliente
+  factory Cliente.fromJson(Map<String, dynamic> json) {
+    return Cliente(
+      id: json['id'],
+      nome: json['nome'],
+      email: json['email'],
+      celular: json['celular'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'nome': nome,
+      'email': email,
+      'celular': celular,
+    };
+  }
 }
