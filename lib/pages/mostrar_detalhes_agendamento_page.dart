@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
-
 import '../models/agendamento.dart';
 
 class MostrarDetalhesAgendamento extends StatefulWidget {
@@ -30,8 +29,15 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
   }
 
   excluirAgendamento(BuildContext context, int id) {
-    final AgendamentoRepository agendamentoRepository = context.read<AgendamentoRepository>();
+    final AgendamentoRepository agendamentoRepository = context
+        .read<AgendamentoRepository>();
     agendamentoRepository.deleteAgendamento(id);
+
+    Navigator.pop(context);
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Excluído com sucesso!')));
   }
 
   Future<void> selecionarDataHora() async {
@@ -63,7 +69,6 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
     _data.text = DateFormat('dd/MM/yyyy HH:mm', 'pt_BR').format(dataFinal);
   }
 
-
   @override
   void initState() {
     super.initState();
@@ -74,8 +79,6 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
 
   @override
   Widget build(BuildContext context) {
-
-
     return Scaffold(
       appBar: AppBar(title: Text(widget.agendamento.cliente.nome)),
       body: Padding(
@@ -129,14 +132,12 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
                 alignment: Alignment.bottomCenter,
                 margin: const EdgeInsets.only(top: 24),
                 child: ElevatedButton(
-                  onPressed: () {
-                    excluirAgendamento(context, widget.agendamento.id);
-                    Navigator.pop(context);
-                  },
+                  onPressed: () =>
+                      excluirAgendamento(context, widget.agendamento.id),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [
-                      Icon(Icons.highlight_remove, size: 26,),
+                      Icon(Icons.highlight_remove, size: 26),
                       Padding(
                         padding: EdgeInsets.all(12),
                         child: Text('Excluir', style: TextStyle(fontSize: 20)),
