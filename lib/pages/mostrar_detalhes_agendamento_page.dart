@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+
 import '../models/agendamento.dart';
 
 class MostrarDetalhesAgendamento extends StatefulWidget {
@@ -28,6 +29,36 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
 
   excluirAgendamento() {}
 
+  Future<void> selecionarDataHora() async {
+    final dataSelecionada = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2023),
+      lastDate: DateTime(2030),
+      locale: const Locale('pt', 'BR'),
+    );
+
+    if (dataSelecionada == null) return;
+
+    final horaSelecionada = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (horaSelecionada == null) return;
+
+    final dataFinal = DateTime(
+      dataSelecionada.year,
+      dataSelecionada.month,
+      dataSelecionada.day,
+      horaSelecionada.hour,
+      horaSelecionada.minute,
+    );
+
+    _data.text = DateFormat('dd/MM/yyyy HH:mm', 'pt_BR').format(dataFinal);
+  }
+
+
   @override
   void initState() {
     super.initState();
@@ -46,6 +77,7 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
           key: _form,
           child: Column(
             children: [
+              //nome do serviço
               TextFormField(
                 controller: _servico, //valor digitado
                 style: const TextStyle(fontSize: 22),
@@ -54,19 +86,26 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
                   labelText: 'Serviço',
                   prefixIcon: Icon(Icons.airline_stops_rounded),
                 ),
+                enabled: false,
               ),
+
               SizedBox(height: 16),
+
+              //data e hora
               TextFormField(
                 controller: _data,
                 style: const TextStyle(fontSize: 22),
                 decoration: const InputDecoration(
+                  labelText: 'Data e horário',
+                  prefixIcon: Icon(Icons.calendar_month),
                   border: OutlineInputBorder(),
-                  labelText: 'Data',
-                  prefixIcon: Icon(Icons.access_time),
                 ),
-                enabled: false, //desativado
+                onTap: selecionarDataHora,
               ),
+
               SizedBox(height: 24),
+
+              //contato
               TextFormField(
                 controller: _contato,
                 style: const TextStyle(fontSize: 22),
@@ -77,6 +116,8 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
                 ),
                 enabled: false, //desativado
               ),
+
+              //botao para excluir
               Container(
                 alignment: Alignment.bottomCenter,
                 margin: const EdgeInsets.only(top: 24),
