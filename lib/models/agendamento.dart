@@ -17,6 +17,7 @@ class Agendamento {
   //converte o json q vai receber da API, recebe String da data e converte para DateTime
   factory Agendamento.fromJson(Map<String, dynamic> json) {
     return Agendamento(
+      //mesmos nomes q vem do json
       id: json['idAgendamento'],
       servico: json['servicoAgendamento'],
       data: DateTime.parse(json['dataAgendamento']),

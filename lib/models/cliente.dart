@@ -15,6 +15,7 @@ class Cliente {
   //le oq a API manda
   factory Cliente.fromJson(Map<String, dynamic> json) {
     return Cliente(
+      //mesmos nomes q vem do json
       id: json['clienteId'],
       nome: json['nomeCliente'],
       email: json['emailCliente'],
@@ -24,6 +25,7 @@ class Cliente {
 
   Map<String, dynamic> toJson() {
     return {
+      //transforma os dados do json nas variaveis da classe
       'clienteId': id,
       'nomeCliente': nome,
       'emailCliente': email,

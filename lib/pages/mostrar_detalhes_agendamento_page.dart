@@ -1,6 +1,8 @@
+import 'package:agendamentos_mobile_dart/repositorys/agendamento_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 
 import '../models/agendamento.dart';
@@ -27,7 +29,10 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
     return DateFormat('dd/MM/yyyy HH:mm', 'pt_BR').format(data);
   }
 
-  excluirAgendamento() {}
+  excluirAgendamento(BuildContext context, int id) {
+    final AgendamentoRepository agendamentoRepository = context.read<AgendamentoRepository>();
+    agendamentoRepository.deleteAgendamento(id);
+  }
 
   Future<void> selecionarDataHora() async {
     final dataSelecionada = await showDatePicker(
@@ -69,6 +74,8 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
 
   @override
   Widget build(BuildContext context) {
+
+
     return Scaffold(
       appBar: AppBar(title: Text(widget.agendamento.cliente.nome)),
       body: Padding(
@@ -122,7 +129,10 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
                 alignment: Alignment.bottomCenter,
                 margin: const EdgeInsets.only(top: 24),
                 child: ElevatedButton(
-                  onPressed: excluirAgendamento,
+                  onPressed: () {
+                    excluirAgendamento(context, widget.agendamento.id);
+                    Navigator.pop(context);
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [

@@ -31,6 +31,19 @@ class AgendamentoRepository extends ChangeNotifier{
     }else{
       throw Exception('Erro ao buscar os agendamentos');
     }
-
   }
+
+  //deleta o agendamento
+  deleteAgendamento(int id) async{
+    final response = await http.delete(Uri.parse(baseURL+'/$id'));
+
+    //status de 200 = ok e 204 = processou com sucesso, mas nao enviou nada de volta
+    if (response.statusCode == 204 || response.statusCode == 200) {
+      agendamentos.removeWhere((a) => a.id == id);
+      notifyListeners();
+    } else {
+      throw Exception('Erro ao deletar agendamento');
+    }
+  }
+
 }
