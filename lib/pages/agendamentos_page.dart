@@ -1,6 +1,7 @@
 import 'package:agendamentos_mobile_dart/repositorys/agendamento_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/agendamento.dart';
 import 'mostrar_detalhes_agendamento_page.dart';
@@ -13,16 +14,8 @@ class AgendamentosPage extends StatefulWidget {
 }
 
 class _AgendamentosPageState extends State<AgendamentosPage> {
-  late final AgendamentoRepository agendamentoRepository;
-  late List<Agendamento> agendamentos;
-
-  //inicio as variaveis
-  @override
-  void initState(){
-    super.initState();
-    agendamentoRepository = AgendamentoRepository();
-    agendamentos = agendamentoRepository.getAgendamentos(); // iniciação do array dos agendamentos
-  }
+  late final AgendamentoRepository agendamentoRepository = context.watch<AgendamentoRepository>(); //inicia o repository
+  late List<Agendamento> agendamentos = agendamentoRepository.agendamentos; //recebe os agendamentos da API
 
   //métodos
   mostrarDetalhesAgendamento(Agendamento agendamento){
@@ -42,12 +35,13 @@ class _AgendamentosPageState extends State<AgendamentosPage> {
       body: ListView.builder(
         itemCount: agendamentos.length,
           itemBuilder: (context, index){
+          final agendamento = agendamentos[index];
           return ListTile(
-            title: Text('Nome do cliente'),
-            subtitle: Text('13/05/2026'),
+            title: Text(agendamento.cliente.nome),
+            subtitle: Text(agendamento.dataFormatada),
             leading: const Icon(Icons.calendar_month),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () => mostrarDetalhesAgendamento(agendamentos[index]),
+            onTap: () => mostrarDetalhesAgendamento(agendamento),
           );
           }
       ),

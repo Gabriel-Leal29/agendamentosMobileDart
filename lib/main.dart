@@ -1,7 +1,9 @@
 import 'package:agendamentos_mobile_dart/pages/home_page.dart';
+import 'package:agendamentos_mobile_dart/repositorys/agendamento_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:provider/provider.dart';
 
 
 void main() async {
@@ -9,7 +11,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initializeDateFormatting('pt_BR', null);
 
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AgendamentoRepository()),
+      ],
+      child: MyApp(),
+    )
+  );
 }
 
 //temas de cores padrão
