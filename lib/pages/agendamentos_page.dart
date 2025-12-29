@@ -15,13 +15,14 @@ class AgendamentosPage extends StatefulWidget {
 }
 
 class _AgendamentosPageState extends State<AgendamentosPage> {
-  late final AgendamentoRepository agendamentoRepository = context
-      .watch<AgendamentoRepository>(); //inicia o repository
-  late List<Agendamento> agendamentos =
-      agendamentoRepository.agendamentos; //recebe os agendamentos da API
 
   @override
   Widget build(BuildContext context) {
+    late final AgendamentoRepository agendamentoRepository = context
+        .watch<AgendamentoRepository>(); //inicia o repository
+    late List<Agendamento> agendamentos = agendamentoRepository
+        .getAgendamentos(); //recebe os agendamentos da API
+
     return Scaffold(
       appBar: AppBar(title: Text('Agendamentos'), centerTitle: true),
       body: agendamentos.isEmpty

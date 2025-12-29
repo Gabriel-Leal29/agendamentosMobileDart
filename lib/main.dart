@@ -1,5 +1,6 @@
 import 'package:agendamentos_mobile_dart/pages/home_page.dart';
 import 'package:agendamentos_mobile_dart/repositorys/agendamento_repository.dart';
+import 'package:agendamentos_mobile_dart/repositorys/cliente_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -15,6 +16,7 @@ void main() async {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AgendamentoRepository()),
+        ChangeNotifierProvider(create: (context) => ClienteRepository()),
       ],
       child: MyApp(),
     )
