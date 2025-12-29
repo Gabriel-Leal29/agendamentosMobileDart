@@ -14,39 +14,42 @@ class AgendamentosPage extends StatefulWidget {
 }
 
 class _AgendamentosPageState extends State<AgendamentosPage> {
-  late final AgendamentoRepository agendamentoRepository = context.watch<AgendamentoRepository>(); //inicia o repository
-  late List<Agendamento> agendamentos = agendamentoRepository.agendamentos; //recebe os agendamentos da API
+  late final AgendamentoRepository agendamentoRepository = context
+      .watch<AgendamentoRepository>(); //inicia o repository
+  late List<Agendamento> agendamentos =
+      agendamentoRepository.agendamentos; //recebe os agendamentos da API
 
   //métodos
-  mostrarDetalhesAgendamento(Agendamento agendamento){
+  mostrarDetalhesAgendamento(Agendamento agendamento) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => MostrarDetalhesAgendamento(agendamento: agendamento))
+      MaterialPageRoute(
+        builder: (context) =>
+            MostrarDetalhesAgendamento(agendamento: agendamento),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Agendamentos'),
-        centerTitle: true,
-      ),
-      body: ListView.builder(
+      appBar: AppBar(title: Text('Agendamentos'), centerTitle: true),
+      body:
+      agendamentos.isEmpty ? Center(child: Text('Nenhum agendamento no momento!',style: TextStyle(fontSize: 20))) :
+      ListView.builder(
         itemCount: agendamentos.length,
-          itemBuilder: (context, index){
+        itemBuilder: (context, index) {
           final agendamento = agendamentos[index];
-          return ListTile(
-            title: Text(agendamento.cliente.nome),
-            subtitle: Text(agendamento.dataFormatada),
-            leading: const Icon(Icons.calendar_month),
-            trailing: const Icon(Icons.chevron_right),
-            onTap: () => mostrarDetalhesAgendamento(agendamento),
-          );
-          }
-      ),
 
+            return ListTile(
+              title: Text(agendamento.cliente.nome),
+              subtitle: Text(agendamento.dataFormatada),
+              leading: const Icon(Icons.calendar_month),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => mostrarDetalhesAgendamento(agendamento),
+            );
+        },
+      ),
     );
   }
-
 }
