@@ -27,6 +27,24 @@ class ClienteRepository extends ChangeNotifier{
     }
   }
 
+  deleteCliente(int id) async {
+    final response = await http.delete(Uri.parse(_baseURL + '/$id'));
+
+    //erros e a mensagem retornada da API
+    if (response.statusCode == 400 || response.statusCode == 409 || response.statusCode == 500) {
+      final erro = jsonDecode(response.body)['message']; // pega a mensagem de erro da API
+      throw Exception(erro.toString());
+    }
+
+    //status de 200 = ok e 204 = processou com sucesso, mas nao enviou nada de volta
+    if (response.statusCode == 204 || response.statusCode == 200) {
+      _clientes.removeWhere((a) => a.id == id);
+      notifyListeners();
+    } else {
+      throw Exception('Erro ao deletar agendamento');
+    }
+  }
+
   List<Cliente> getClientes(){
     return _clientes;
   }

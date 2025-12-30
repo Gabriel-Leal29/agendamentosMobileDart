@@ -23,7 +23,7 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
   final _data = TextEditingController();
   final _contato = TextEditingController();
 
-  late final AgendamentoRepository _agendamentoRepository;
+  late final AgendamentoRepository _agendamentoRepository = context.watch<AgendamentoRepository>();
 
   //métodos
   String formatarData(DateTime data) {
@@ -72,7 +72,6 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
   @override
   void initState() {
     super.initState();
-    _agendamentoRepository = AgendamentoRepository();
     _servico.text = widget.agendamento.servico;
     _data.text = formatarData(widget.agendamento.data);
     _contato.text = widget.agendamento.cliente.celular;

@@ -13,25 +13,36 @@ class ClientesPage extends StatefulWidget {
 }
 
 class _ClientesPageState extends State<ClientesPage> {
-  late final ClienteRepository _clienteRepository;
 
-  @override
-  void initState() {
-    super.initState();
-    _clienteRepository = ClienteRepository();
+  // métodos
+  deletarCliente(int id) async{
+    final _clienteRepository = context.read<ClienteRepository>();
+
+    try {
+      await _clienteRepository.deleteCliente(id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Cliente deletado com sucesso!')),
+      );
+      Navigator.pop(context);
+    } catch (e) {
+      final msg = e.toString().replaceFirst('Exception: ', '');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg)), // mostra o erro retornado da API
+      );
+    }
   }
-
 
   @override
   Widget build(BuildContext context) {
-    List<Cliente> clientes = _clienteRepository.getClientes();
+    final _clienteRepository = context.watch<ClienteRepository>();
+    final clientes = _clienteRepository.getClientes();
 
     return Scaffold(
       appBar: AppBar(title: Text('Lista de Clientes'), centerTitle: true),
       body: clientes.isEmpty
           ? Center(
               child: Text(
-                'Nenhum cliente cadastrado!',
+                'Nenhum cliente cadastrado! + ${clientes}',
                 style: TextStyle(fontSize: 20),
               ),
             )
@@ -46,9 +57,9 @@ class _ClientesPageState extends State<ClientesPage> {
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(onPressed: () => editarCliente, icon: Icon(Icons.app_registration_rounded)),
+                      IconButton(onPressed: () => null, icon: Icon(Icons.app_registration_rounded)),
                       SizedBox(width: 8),
-                      IconButton(onPressed: deletarCliente(cliente.id), icon: Icon(Icons.delete)),
+                      IconButton(onPressed: () => deletarCliente(cliente.id), icon: Icon(Icons.delete)),
                     ],
                   ),
                 );
