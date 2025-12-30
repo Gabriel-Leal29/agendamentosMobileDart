@@ -25,8 +25,9 @@ class _AdicionarAgendamentoState extends State<AdicionarAgendamento> {
 
   //métodos
 
-   criarAgendamento(BuildContext context) async{
-    late AgendamentoRepository agendamentoRepository = context.read<AgendamentoRepository>();
+  criarAgendamento(BuildContext context) async {
+    late AgendamentoRepository agendamentoRepository = context
+        .read<AgendamentoRepository>();
 
     //agendamento que vai ser passado na requisição
     final novoAgendamento = Agendamento(
@@ -44,7 +45,6 @@ class _AdicionarAgendamentoState extends State<AdicionarAgendamento> {
       );
 
       Navigator.pop(context);
-
     } catch (e) {
       final msg = e.toString().replaceFirst('Exception: ', '');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -81,14 +81,17 @@ class _AdicionarAgendamentoState extends State<AdicionarAgendamento> {
 
     setState(() {
       _dataSelecionada = dataFinal;
-      _dataController.text =
-          DateFormat('dd/MM/yyyy HH:mm', 'pt_BR').format(dataFinal);
+      _dataController.text = DateFormat(
+        'dd/MM/yyyy HH:mm',
+        'pt_BR',
+      ).format(dataFinal);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    late ClienteRepository clienteRepository = context.watch<ClienteRepository>();
+    late ClienteRepository clienteRepository = context
+        .watch<ClienteRepository>();
     final clientes = clienteRepository.getClientes();
 
     return Scaffold(
@@ -137,8 +140,8 @@ class _AdicionarAgendamentoState extends State<AdicionarAgendamento> {
                   labelText: 'Serviço',
                   prefixIcon: Icon(Icons.airline_stops_rounded),
                 ),
-                validator: (value){
-                  if(value == null){
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
                     return 'Digite o serviço!';
                   }
                   return null;
@@ -157,8 +160,8 @@ class _AdicionarAgendamentoState extends State<AdicionarAgendamento> {
                   border: OutlineInputBorder(),
                 ),
                 onTap: selecionarDataHora,
-                validator: (value){
-                  if(value==null){
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
                     return 'Selecione a data e o horário!';
                   }
 
@@ -175,11 +178,19 @@ class _AdicionarAgendamentoState extends State<AdicionarAgendamento> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: () => criarAgendamento(context),
-                  child: Text('Adicionar agendamento',style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold
-                  ),),
+                  onPressed: () {
+                    //verifica os validator's do form
+                    if (_form.currentState!.validate()) {
+                      criarAgendamento(context);
+                    }
+                  },
+                  child: Text(
+                    'Adicionar agendamento',
+                    style: TextStyle(
+                      fontSize: 20.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
               ),
             ],
