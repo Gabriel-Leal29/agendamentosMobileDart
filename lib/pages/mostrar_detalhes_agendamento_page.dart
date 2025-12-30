@@ -132,8 +132,10 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
                 alignment: Alignment.bottomCenter,
                 margin: const EdgeInsets.only(top: 24),
                 child: ElevatedButton(
-                  onPressed: () =>
-                      excluirAgendamento(context, widget.agendamento.id),
+                  onPressed: widget.agendamento.id == null
+                      ? null
+                      : () =>
+                            excluirAgendamento(context, widget.agendamento.id!),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: const [

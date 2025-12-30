@@ -5,36 +5,66 @@ import 'package:flutter/cupertino.dart';
 import '../models/agendamento.dart';
 import 'package:http/http.dart' as http;
 
-class AgendamentoRepository extends ChangeNotifier{
+class AgendamentoRepository extends ChangeNotifier {
   final List<Agendamento> _agendamentos = [];
-  final String _baseURL = 'http://10.0.2.2:8080/agendamentos';// rota usada
+  final String _baseURL = 'http://10.0.2.2:8080/agendamentos'; // rota usada
 
-  AgendamentoRepository(){
+  AgendamentoRepository() {
     _readAgendamentos();
   }
-  
-  List<Agendamento> getAgendamentos (){
+
+  List<Agendamento> getAgendamentos() {
     return _agendamentos;
   }
 
   //lê os dados da API
-  _readAgendamentos() async{
-    final response = await http.get(Uri.parse(_baseURL)); //pega a requisição da API
+  _readAgendamentos() async {
+    final response = await http.get(
+      Uri.parse(_baseURL),
+    ); //pega a requisição da API
 
     //verifica se foi o código de sucesso
-    if(response.statusCode == 200){
-      final List jsonList = jsonDecode(response.body); //converte json para List e o jsonDecode transforma em List
-      _agendamentos.addAll(jsonList.map((e) => Agendamento.fromJson(e))); //adiciona no array de agendamentos
+    if (response.statusCode == 200) {
+      final List jsonList = jsonDecode(
+        response.body,
+      ); //converte json para List e o jsonDecode transforma em List
+      _agendamentos.addAll(
+        jsonList.map((e) => Agendamento.fromJson(e)),
+      ); //adiciona no array de agendamentos
 
       notifyListeners();
-    }else{
+    } else {
       throw Exception('Erro ao buscar os agendamentos');
     }
   }
 
+  createAgendamento(Agendamento novoAgendamento) async {
+    final response = await http.post(
+      Uri.parse(_baseURL),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(novoAgendamento.toJsonCreate()),
+    );
+
+    //erros e a mensagem retornada da API
+    if (response.statusCode == 400 || response.statusCode == 409 || response.statusCode == 500) {
+      final erro = jsonDecode(response.body)['message']; // pega a mensagem de erro da API
+      throw Exception(erro.toString());
+    }
+
+    //201 = criado e 200 = ok
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      await _readAgendamentos();
+      notifyListeners();
+    } else {
+      throw Exception('Erro ao criar agendamento');
+    }
+
+    notifyListeners();
+  }
+
   //deleta o agendamento
-  deleteAgendamento(int id) async{
-    final response = await http.delete(Uri.parse(_baseURL+'/$id'));
+  deleteAgendamento(int id) async {
+    final response = await http.delete(Uri.parse(_baseURL + '/$id'));
 
     //status de 200 = ok e 204 = processou com sucesso, mas nao enviou nada de volta
     if (response.statusCode == 204 || response.statusCode == 200) {
@@ -44,5 +74,4 @@ class AgendamentoRepository extends ChangeNotifier{
       throw Exception('Erro ao deletar agendamento');
     }
   }
-
 }

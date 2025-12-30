@@ -1,3 +1,5 @@
+import 'package:agendamentos_mobile_dart/models/agendamento.dart';
+import 'package:agendamentos_mobile_dart/repositorys/agendamento_repository.dart';
 import 'package:agendamentos_mobile_dart/repositorys/cliente_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -16,14 +18,39 @@ class AdicionarAgendamento extends StatefulWidget {
 class _AdicionarAgendamentoState extends State<AdicionarAgendamento> {
   final _form = GlobalKey<FormState>();
   final _servico = TextEditingController();
-  final _data = TextEditingController();
+  final _dataController = TextEditingController();
   late List<Cliente> clientes;
   Cliente? _clienteSelecionado;
+  DateTime? _dataSelecionada;
 
   //métodos
 
-  String formatarData(DateTime data) {
-    return DateFormat('dd/MM/yyyy HH:mm', 'pt_BR').format(data);
+   criarAgendamento(BuildContext context) async{
+    late AgendamentoRepository agendamentoRepository = context.read<AgendamentoRepository>();
+
+    //agendamento que vai ser passado na requisição
+    final novoAgendamento = Agendamento(
+      servico: _servico.text,
+      data: _dataSelecionada!,
+      cliente: _clienteSelecionado!,
+    );
+
+    //verifica se deu certo a criação do agendamento
+    try {
+      await agendamentoRepository.createAgendamento(novoAgendamento);
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Agendamento criado com sucesso!')),
+      );
+
+      Navigator.pop(context);
+
+    } catch (e) {
+      final msg = e.toString().replaceFirst('Exception: ', '');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(msg)), // mostra o erro retornado da API
+      );
+    }
   }
 
   Future<void> selecionarDataHora() async {
@@ -52,7 +79,11 @@ class _AdicionarAgendamentoState extends State<AdicionarAgendamento> {
       horaSelecionada.minute,
     );
 
-    _data.text = DateFormat('dd/MM/yyyy HH:mm', 'pt_BR').format(dataFinal);
+    setState(() {
+      _dataSelecionada = dataFinal;
+      _dataController.text =
+          DateFormat('dd/MM/yyyy HH:mm', 'pt_BR').format(dataFinal);
+    });
   }
 
   @override
@@ -106,25 +137,51 @@ class _AdicionarAgendamentoState extends State<AdicionarAgendamento> {
                   labelText: 'Serviço',
                   prefixIcon: Icon(Icons.airline_stops_rounded),
                 ),
+                validator: (value){
+                  if(value == null){
+                    return 'Digite o serviço!';
+                  }
+                  return null;
+                },
               ),
 
               SizedBox(height: 16),
 
               //data e hora
               TextFormField(
-                controller: _data,
-                style: const TextStyle(fontSize: 22),
+                controller: _dataController,
+                readOnly: true,
                 decoration: const InputDecoration(
                   labelText: 'Data e horário',
                   prefixIcon: Icon(Icons.calendar_month),
                   border: OutlineInputBorder(),
                 ),
                 onTap: selecionarDataHora,
+                validator: (value){
+                  if(value==null){
+                    return 'Selecione a data e o horário!';
+                  }
+
+                  if (_dataSelecionada!.isBefore(DateTime.now())) {
+                    return 'Não é permitido agendar no passado!';
+                  }
+                  return null;
+                },
               ),
 
               SizedBox(height: 24),
 
-              //contato
+              //botao para adicionar
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () => criarAgendamento(context),
+                  child: Text('Adicionar agendamento',style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold
+                  ),),
+                ),
+              ),
             ],
           ),
         ),

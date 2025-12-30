@@ -59,6 +59,12 @@ class _AgendamentosPageState extends State<AgendamentosPage> {
           context,
           MaterialPageRoute(builder: (context) => AdicionarAgendamento()),
         ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(Icons.add),
+          ],
+        ),
       ),
     );
   }
