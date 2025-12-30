@@ -69,6 +69,31 @@ class ClienteRepository extends ChangeNotifier {
     }
   }
 
+  updateCliente(int id, Cliente cliente) async {
+    final response = await http.put(Uri.parse(_baseURL + '/$id'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(cliente.toJson()));
+
+    if (response.statusCode == 200 || response.statusCode == 204) {
+      //sucesso
+      await _readClientes();
+      notifyListeners();
+      return;
+    }
+
+    //erros
+    if (response.statusCode == 400 ||
+        response.statusCode == 404 ||
+        response.statusCode == 409 ||
+        response.statusCode == 500) {
+      final msg = jsonDecode(response.body)['message'];
+      throw Exception(msg);
+    }
+
+    //erro inesperado
+    throw Exception('Erro inesperado ao atualizar cliente');
+  }
+
   List<Cliente> getClientes() {
     return _clientes;
   }

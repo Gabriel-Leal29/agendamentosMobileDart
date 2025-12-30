@@ -23,7 +23,7 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
   final _data = TextEditingController();
   final _contato = TextEditingController();
 
-  late final AgendamentoRepository _agendamentoRepository = context.watch<AgendamentoRepository>();
+  late final AgendamentoRepository _agendamentoRepository = context.read<AgendamentoRepository>();
 
   //métodos
   String formatarData(DateTime data) {
@@ -110,6 +110,7 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
                   prefixIcon: Icon(Icons.calendar_month),
                   border: OutlineInputBorder(),
                 ),
+                enabled: false,
                 onTap: selecionarDataHora,
               ),
 

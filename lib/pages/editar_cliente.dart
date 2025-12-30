@@ -5,35 +5,42 @@ import 'package:provider/provider.dart';
 
 import '../models/cliente.dart';
 
-class AdicionarCliente extends StatefulWidget {
-  AdicionarCliente({Key? key}) : super(key: key);
+class EditarCliente extends StatefulWidget{
+  final Cliente cliente;
+
+  EditarCliente({Key? key, required this.cliente}) : super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AdicionarClienteState();
+  State<StatefulWidget> createState() => _EditarClienteState();
 }
 
-class _AdicionarClienteState extends State<AdicionarCliente> {
+class _EditarClienteState extends State<EditarCliente> {
   final _form = GlobalKey<FormState>();
   final _nomeCliente = TextEditingController();
   final _celularCliente = TextEditingController();
   final _emailCliente = TextEditingController();
 
-  //métodos
-  criarCliente() async {
-    late ClienteRepository clienteRepository = context.read<
-        ClienteRepository>();
+  @override
+  void initState() {
+    super.initState();
+    // reenche os campos com os dados do cliente
+    _nomeCliente.text = widget.cliente.nome;
+    _emailCliente.text = widget.cliente.email;
+    _celularCliente.text = widget.cliente.celular;
+  }
 
-    //passa o objeto cliente
-    final novoCliente = Cliente(
+  editarCliente() async{
+    ClienteRepository clienteRepository = context.read<ClienteRepository>();
+
+    final clienteEditado = Cliente(
         nome: _nomeCliente.text, email: _emailCliente.text, celular: _celularCliente.text
     );
 
-    //verifica se deu certo a criação do cliente
     try {
-      await clienteRepository.createCliente(novoCliente);
+      await clienteRepository.updateCliente(widget.cliente.id!, clienteEditado);
 
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Cliente cadastrado com sucesso!')),
+        const SnackBar(content: Text('Cliente editado com sucesso!')),
       );
 
       Navigator.pop(context);
@@ -135,11 +142,11 @@ class _AdicionarClienteState extends State<AdicionarCliente> {
                   onPressed: (){
                     //verifica os validator's do form
                     if (_form.currentState!.validate()) {
-                      criarCliente();
+                      editarCliente();
                     }
                   },
                   child: Text(
-                    'Adicionar Cliente',
+                    'Editar Cliente',
                     style: TextStyle(
                       fontSize: 20.0,
                       fontWeight: FontWeight.bold,

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../models/cliente.dart';
 import 'adicionar_cliente.dart';
+import 'editar_cliente.dart';
 
 class ClientesPage extends StatefulWidget {
   ClientesPage({Key? key}) : super(key: key);
@@ -14,9 +15,8 @@ class ClientesPage extends StatefulWidget {
 }
 
 class _ClientesPageState extends State<ClientesPage> {
-
   // métodos
-  deletarCliente(int id) async{
+  deletarCliente(int id) async {
     final _clienteRepository = context.read<ClienteRepository>();
 
     try {
@@ -24,7 +24,6 @@ class _ClientesPageState extends State<ClientesPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Cliente deletado com sucesso!')),
       );
-      Navigator.pop(context);
     } catch (e) {
       final msg = e.toString().replaceFirst('Exception: ', '');
       ScaffoldMessenger.of(context).showSnackBar(
@@ -43,7 +42,7 @@ class _ClientesPageState extends State<ClientesPage> {
       body: clientes.isEmpty
           ? Center(
               child: Text(
-                'Nenhum cliente cadastrado! + ${clientes}',
+                'Nenhum cliente cadastrado!',
                 style: TextStyle(fontSize: 20),
               ),
             )
@@ -53,32 +52,38 @@ class _ClientesPageState extends State<ClientesPage> {
                 final cliente = clientes[index];
 
                 return ListTile(
-                  title: Text(cliente.nome,style: TextStyle(fontSize: 20.0),),
+                  title: Text(cliente.nome, style: TextStyle(fontSize: 20.0)),
                   subtitle: Text(cliente.celular),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      IconButton(onPressed: () => null, icon: Icon(Icons.app_registration_rounded)),
+                      IconButton(
+                        onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditarCliente(cliente: cliente,),
+                          ),
+                        ),
+                        icon: Icon(Icons.app_registration_rounded),
+                      ),
                       SizedBox(width: 8),
-                      IconButton(onPressed: () => deletarCliente(cliente.id!), icon: Icon(Icons.delete)),
+                      IconButton(
+                        onPressed: () => deletarCliente(cliente.id!),
+                        icon: Icon(Icons.delete),
+                      ),
                     ],
                   ),
                 );
               },
             ),
-        //botao flutuante, o botao de adicionar agendamento
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => AdicionarCliente()),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.add),
-            ],
-          ),
-        )
+      //botao flutuante, o botao de adicionar agendamento
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => AdicionarCliente()),
+        ),
+        child: Row(mainAxisSize: MainAxisSize.min, children: [Icon(Icons.add)]),
+      ),
     );
   }
 }
