@@ -1,11 +1,11 @@
 class Cliente {
-  final int id;
+  final int? id;
   final String nome;
   final String email;
   final String celular;
 
   Cliente({
-    required this.id,
+    this.id,
     required this.nome,
     required this.email,
     required this.celular,
@@ -23,10 +23,9 @@ class Cliente {
     );
   }
 
+  //vai transformar o objeto em json para enviar as requisições
   Map<String, dynamic> toJson() {
     return {
-      //transforma os dados do json nas variaveis da classe
-      'clienteId': id,
       'nomeCliente': nome,
       'emailCliente': email,
       'celularCliente': celular,

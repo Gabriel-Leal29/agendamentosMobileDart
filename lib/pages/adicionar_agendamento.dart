@@ -25,7 +25,7 @@ class _AdicionarAgendamentoState extends State<AdicionarAgendamento> {
 
   //métodos
 
-  criarAgendamento(BuildContext context) async {
+  criarAgendamento() async {
     late AgendamentoRepository agendamentoRepository = context
         .read<AgendamentoRepository>();
 
@@ -181,7 +181,7 @@ class _AdicionarAgendamentoState extends State<AdicionarAgendamento> {
                   onPressed: () {
                     //verifica os validator's do form
                     if (_form.currentState!.validate()) {
-                      criarAgendamento(context);
+                      criarAgendamento();
                     }
                   },
                   child: Text(

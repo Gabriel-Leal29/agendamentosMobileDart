@@ -58,8 +58,6 @@ class AgendamentoRepository extends ChangeNotifier {
     } else {
       throw Exception('Erro ao criar agendamento');
     }
-
-    notifyListeners();
   }
 
   //deleta o agendamento

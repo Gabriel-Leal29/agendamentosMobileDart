@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/cliente.dart';
+import 'adicionar_cliente.dart';
 
 class ClientesPage extends StatefulWidget {
   ClientesPage({Key? key}) : super(key: key);
@@ -59,12 +60,25 @@ class _ClientesPageState extends State<ClientesPage> {
                     children: [
                       IconButton(onPressed: () => null, icon: Icon(Icons.app_registration_rounded)),
                       SizedBox(width: 8),
-                      IconButton(onPressed: () => deletarCliente(cliente.id), icon: Icon(Icons.delete)),
+                      IconButton(onPressed: () => deletarCliente(cliente.id!), icon: Icon(Icons.delete)),
                     ],
                   ),
                 );
               },
             ),
+        //botao flutuante, o botao de adicionar agendamento
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => AdicionarCliente()),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.add),
+            ],
+          ),
+        )
     );
   }
 }
