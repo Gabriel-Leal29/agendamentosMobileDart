@@ -23,15 +23,15 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
   final _data = TextEditingController();
   final _contato = TextEditingController();
 
+  late final AgendamentoRepository _agendamentoRepository;
+
   //métodos
   String formatarData(DateTime data) {
     return DateFormat('dd/MM/yyyy HH:mm', 'pt_BR').format(data);
   }
 
   excluirAgendamento(BuildContext context, int id) {
-    final AgendamentoRepository agendamentoRepository = context
-        .read<AgendamentoRepository>();
-    agendamentoRepository.deleteAgendamento(id);
+    _agendamentoRepository.deleteAgendamento(id);
 
     Navigator.pop(context);
 
@@ -72,6 +72,7 @@ class _MostrarDetalhesAgendamento extends State<MostrarDetalhesAgendamento> {
   @override
   void initState() {
     super.initState();
+    _agendamentoRepository = AgendamentoRepository();
     _servico.text = widget.agendamento.servico;
     _data.text = formatarData(widget.agendamento.data);
     _contato.text = widget.agendamento.cliente.celular;

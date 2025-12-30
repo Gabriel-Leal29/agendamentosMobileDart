@@ -13,11 +13,18 @@ class ClientesPage extends StatefulWidget {
 }
 
 class _ClientesPageState extends State<ClientesPage> {
+  late final ClienteRepository _clienteRepository;
+
+  @override
+  void initState() {
+    super.initState();
+    _clienteRepository = ClienteRepository();
+  }
+
+
   @override
   Widget build(BuildContext context) {
-    final ClienteRepository clienteRepository = context
-        .watch<ClienteRepository>();
-    List<Cliente> clientes = clienteRepository.getClientes();
+    List<Cliente> clientes = _clienteRepository.getClientes();
 
     return Scaffold(
       appBar: AppBar(title: Text('Lista de Clientes'), centerTitle: true),
@@ -34,14 +41,14 @@ class _ClientesPageState extends State<ClientesPage> {
                 final cliente = clientes[index];
 
                 return ListTile(
-                  title: Text(cliente.nome),
+                  title: Text(cliente.nome,style: TextStyle(fontSize: 20.0),),
                   subtitle: Text(cliente.celular),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.app_registration_rounded),
+                      IconButton(onPressed: () => editarCliente, icon: Icon(Icons.app_registration_rounded)),
                       SizedBox(width: 8),
-                      Icon(Icons.delete)
+                      IconButton(onPressed: deletarCliente(cliente.id), icon: Icon(Icons.delete)),
                     ],
                   ),
                 );
